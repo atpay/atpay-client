@@ -8,5 +8,5 @@ Gem::Specification.new do |s|
   s.email       = 'james@atpay.com'
   s.files       = ["lib/**"]
   s.homepage    = "https://atpay.com"
-  s.add_dependency "nacl"
+  s.add_dependency "rbnacl"
 end

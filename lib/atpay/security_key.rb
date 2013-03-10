@@ -1,4 +1,4 @@
-require 'nacl'
+require 'rbnacl'
 require 'base64'
 require 'securerandom'
 
@@ -24,7 +24,8 @@ module AtPay
     end
 
     def body_frame
-      NaCl.crypto_box(crypted_frame, nonce, @session.config.atpay_public_key, @session.config.private_key)
+      boxer = Crypto::Box.new(@session.config.atpay_public_key, @session.config.private_key)
+      boxer.box(nonce, crypted_frame)
     end
 
     def crypted_frame
@@ -40,7 +41,7 @@ module AtPay
     end
 
     def nonce
-      @nonce ||= SecureRandom.random_bytes(NaCl::BOX_NONCE_LENGTH)
+      @nonce ||= SecureRandom.random_bytes(24)
     end
   end
 end

@@ -1,5 +1,5 @@
 require 'atpay'
-require 'nacl'
+require 'rbnacl'
 require 'base64'
 require 'helper'
 

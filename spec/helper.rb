@@ -10,7 +10,11 @@ module Setup
   extend RSpec::Core::SharedContext
 
   let(:partner_id)      { 123 }
-  let(:keys)            { NaCl.crypto_box_keypair }
+  let(:keys)            { 
+    sec = Crypto::PrivateKey.generate
+    pub = sec.public_key
+    [pub.to_bytes, sec.to_bytes]
+  }
   let(:public_key)      { Base64.encode64(keys[0]) }
   let(:private_key)     { Base64.encode64(keys[1]) }
 end
