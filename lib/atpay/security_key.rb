@@ -4,10 +4,11 @@ require 'securerandom'
 
 module AtPay
   class SecurityKey
-    def initialize(options)
-      raise ValueError unless options[:email] =~ /.+@.+/
-      raise ValueError unless options[:amount].is_a? Float
+    def initialize(session, options)
+      raise ArgumentError.new("email") unless options[:email] =~ /.+@.+/
+      raise ArgumentError.new("amount") unless options[:amount].is_a? Float
 
+      @session = session
       @options = options
     end
 
@@ -19,11 +20,11 @@ module AtPay
 
     private
     def partner_frame
-      [AtPay::Base.partner_id].pack("Q>")
+      [@session.config.partner_id].pack("Q>")
     end
 
     def body_frame
-      NaCl.crypto_box(crypted_frame, nonce, AtPay::Base.atpay_public_key, AtPay::Base.private_key)
+      NaCl.crypto_box(crypted_frame, nonce, @session.config.atpay_public_key, @session.config.private_key)
     end
 
     def crypted_frame

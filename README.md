@@ -1,10 +1,14 @@
-# @Pay OAuth2.0 API Client
+# @Pay API Client
 
 Client interface for the @Pay API and key generation for 
 performance optimization. This library is designed for advanced
 implementation of the @Pay API, with the primary purpose
 of enhancing performance for high-traffic, heavily utilized
 platforms. 
+
+Interfaces here are implemented after receiving OAuth 2.0
+privileges for the partner/user record. You cannot authenticate
+directly to the API with this library at this moment.
 
 ## Installation
 
@@ -18,19 +22,20 @@ gem 'atpay-client', :require => 'atpay'
 
 ## Configuration
 
-Clients are provided with API keys for accessing OAuth 2.0
-authentication endpoints, a partner ID value, and a keypair 
-for encrypting and generating security keys (when applicable). 
+With the `keys` scope, authenticate with OAuth, and make a request
+to the 'keys' endpoint (see the api documentation at
+https://sandbox-api.atpay.com/doc) to receive the partner_id,
+public key and private key.
 
 Apply these values to your configuration
 
 ```ruby
-AtPay::Base.config = {
+session = AtPay::Base.new({
   :environment  => :sandbox,    # Either :sandbox or :production
   :partner_id   => 1234,        # Integer value partner id
   :public_key   => "XXX",       # Provided public key
   :private_key  => "YYY"        # Provided private key
-}
+})
 ```
 
 ## Usage
@@ -45,10 +50,7 @@ Let's assume you have a member with an @Pay account, and you
 would like to include a $20.00 purchase in an email to them:
 
 ```ruby
-@key = AtPay::SecurityKey.new {
-  :amount => 20.00, 
-  :email => "test@example.com"
-}.to_s
+@key = session.security_key(:amount => 20.00, :email => "test@example.com")
 ```
 
 Now, include the `@key` in a mailto link within the email
@@ -64,9 +66,9 @@ expires option and provide a unix timestamp representing the
 desired expiration:
 
 ```ruby
-@key = AtPay::SecurityKey.new {
+@key = session.security_key({
   :amount   => 20.00,
   :email    => "test@example.com",
   :expires  => (Time.now.to_i + (3600 * 5)) # Expire in 5 hours
-}
+})
 ```
