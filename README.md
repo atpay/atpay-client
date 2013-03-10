@@ -30,7 +30,7 @@ public key and private key.
 Apply these values to your configuration
 
 ```ruby
-session = AtPay::Base.new({
+session = AtPay::Session.new({
   :environment  => :sandbox,    # Either :sandbox or :production
   :partner_id   => 1234,        # Integer value partner id
   :public_key   => "XXX",       # Provided public key
