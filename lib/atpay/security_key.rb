@@ -7,7 +7,7 @@ module AtPay
     def initialize(session, options)
       raise ArgumentError.new("email") unless options[:email] =~ /.+@.+/
       raise ArgumentError.new("amount") unless options[:amount].is_a? Float
-
+  
       @session = session
       @options = options
     end
@@ -29,11 +29,15 @@ module AtPay
     end
 
     def crypted_frame
-      [@options[:email], "/", options_frame].join
+      [@options[:email], options_group, "/", options_frame].flatten.compact.join
     end
 
     def options_frame
       [@options[:amount], expires].pack("g l>")
+    end
+
+    def options_group
+      ":#{@options[:group]}" if @options[:group]
     end
 
     def expires

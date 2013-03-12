@@ -1,3 +1,5 @@
+# TODO: Decode utilities for further testing
+
 require 'atpay'
 require 'rbnacl'
 require 'base64'
@@ -46,6 +48,9 @@ describe AtPay::SecurityKey do
     it "returns a valid key" do
       key = AtPay::SecurityKey.new(session, {:email => "james@atpay.com", :amount => 25.00}).to_s
     end
-  end
 
+    it "returns a key with a group" do
+      key = AtPay::SecurityKey.new(session, {:email => "james@atpay.com", :amount => 25.00, :group => "1234"}).to_s
+    end
+  end
 end

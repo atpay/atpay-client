@@ -17,7 +17,7 @@ Add the 'atpay-client' gem to your Gemfile:
 ```ruby
 #Gemfile
 
-gem 'atpay-client', :require => 'atpay'
+gem 'atpay', :github => "EasyGive/atpay-client"
 ```
 
 ## Configuration
@@ -71,4 +71,20 @@ desired expiration:
   :email    => "test@example.com",
   :expires  => (Time.now.to_i + (3600 * 5)) # Expire in 5 hours
 })
+```
+
+## Key Groups
+
+You can generate groups of key values for a user that will automatically
+invalidate all members of the group when one key is processed. This
+is useful when sending out multiple keys via email when only one key should ever
+be processed:
+
+```ruby
+@keys = session.security_key({
+  :amount     => [20.00, 30.00, 40.00],
+  :email      => "test@example.com"
+})
+
+# returns array length == 3
 ```
