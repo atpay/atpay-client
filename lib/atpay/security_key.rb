@@ -14,14 +14,14 @@ module AtPay
     end
 
     def email_token
-      "@#{Base64.encode64([nonce, partner_frame, body_frame].join)}"
+      "@#{Base64.strict_encode64([nonce, partner_frame, body_frame].join)}"
     ensure
       @nonce = nil
     end
 
     def site_token(remote_addr, headers)
       raise ArgumentError.new("card required for site tokens") if @options[:card].nil?
-      "@#{Base64.encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
+      "@#{Base64.strict_encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
     ensure
       @nonce = nil
     end

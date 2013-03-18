@@ -15,8 +15,8 @@ module Setup
     pub = sec.public_key
     [pub.to_bytes, sec.to_bytes]
   }
-  let(:public_key)      { Base64.encode64(keys[0]) }
-  let(:private_key)     { Base64.encode64(keys[1]) }
+  let(:public_key)      { Base64.strict_encode64(keys[0]) }
+  let(:private_key)     { Base64.strict_encode64(keys[1]) }
 end
 
 RSpec.configure do |r|
