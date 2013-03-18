@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors     = ["James Kassemi"]
   s.email       = 'james@atpay.com'
   s.files       = `git ls-files`.split($/)
-  s.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  s.test_files  = s.files.grep(%r{^(test|spec|features)/})
   s.homepage    = "https://atpay.com"
   s.add_dependency "rbnacl"
   s.add_runtime_dependency 'ffi'
