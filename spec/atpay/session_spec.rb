@@ -17,7 +17,16 @@ describe AtPay::Session do
 
   it "Generates security key" do
     session.security_key(:amount => 20.00, 
-      :email => "james@example.com").should_not be_empty
+      :email => "james@example.com").to_s.should_not be_empty
+  end
+
+  it "Generates site token" do
+    session.security_key(:amount => 20.00, 
+      :card => "test").site_token("0.0.0.0", {
+      "HTTP_USER_AGENT" => "0",
+      "HTTP_ACCEPT_LANGUAGE" => "1",
+      "HTTP_ACCEPT_CHARSET" => "2"
+    }).should_not be_empty
   end
 
   it "Generates multiple security keys" do
