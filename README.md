@@ -1,5 +1,8 @@
 # @Pay API Client
 
+[![Build Status](https://travis-ci.org/EasyGive/atpay-client.png)](https://travis-ci.org/EasyGive/atpay-client)
+
+
 Client interface for the @Pay API and key generation for 
 performance optimization. This library is designed for advanced
 implementation of the @Pay API, with the primary purpose
