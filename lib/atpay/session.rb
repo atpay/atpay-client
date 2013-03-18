@@ -25,8 +25,8 @@ module AtPay
       if options[:amount].is_a? Array
         security_keys(options)
       else
-        SecurityKey.new(self, options.update(:amount => options[:amount])).to_s
+        SecurityKey.new(self, options.update(:amount => options[:amount]))
       end
-    end  
+    end
   end
 end
