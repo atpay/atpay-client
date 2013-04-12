@@ -27,7 +27,7 @@ gem 'atpay', :github => "EasyGive/atpay-client"
 
 With the `keys` scope, authenticate with OAuth, and make a request
 to the 'keys' endpoint (see the api documentation at
-https://sandbox-api.atpay.com/doc) to receive the partner_id,
+https://developer.atpay.com) to receive the partner_id,
 public key and private key.
 
 Apply these values to your configuration
