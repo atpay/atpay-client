@@ -1,6 +1,6 @@
 # @Pay API Client
 
-[![Build Status](https://travis-ci.org/EasyGive/atpay-client.png)](https://travis-ci.org/EasyGive/atpay-client)
+[![Build Status](https://travis-ci.org/atpay/atpay-client.png)](https://travis-ci.org/atpay/atpay-client)
 
 
 Client interface for the @Pay API and key generation for 
@@ -20,7 +20,7 @@ Add the 'atpay-client' gem to your Gemfile:
 ```ruby
 #Gemfile
 
-gem 'atpay', :github => "EasyGive/atpay-client"
+gem 'atpay', :github => "atpay/atpay-client"
 ```
 
 ## Configuration
