@@ -13,7 +13,7 @@ class Arguments
   end
 end
 
-class Usage
+module Usage
   USAGE = <<-EOS
 
     The @Pay Client will generate @Pay Tokens for you.  You can use this tool to generate both email
@@ -43,10 +43,6 @@ class Usage
                                 seconds since epoch.
 
   EOS
-
-  def initialize(args)
-    
-  end
 end
 
 
