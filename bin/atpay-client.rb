@@ -2,7 +2,6 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'atpay'
 require 'yaml'
-require 'pry'
 
 
 class Arguments
@@ -27,8 +26,10 @@ module Usage
 
     Required:
       site_token|email_token    You must specify the type of token you wish to generate
-      card|targets              You must at least specify a card or email address.  For a site token
-                                you must provide a card.
+      cards|targets             You must at least specify a card or email address.  For a site token
+                                you must provide a card.  If you are building multiple tokens ensure
+                                that you provide a card token for each email and that the order is
+                                correct.
       amount|group              You also need to specify either a single amount or a group of amounts.
 
 
@@ -47,9 +48,10 @@ end
 
 
 class ClientRunner
-  OPTIONS = %w(expires group amount card)
+  OPTIONS = %w(expires group amount)
   HEADERS = %w(HTTP_USER_AGENT HTTP_ACCEPT_LANGUAGE HTTP_ACCEPT_CHARSET)
   EMAIL = /[\w\d\.]+@[\w\.]+[\w]+/
+  CARD = /.*=$/
 
   def initialize(args)
     @config = Arguments.new
@@ -70,15 +72,18 @@ class ClientRunner
     site_params args
     convert_amounts
     convert_expiration
-
-    args[args.index('targets') + 1].split(' ')[0].match(EMAIL) ? emails(args[(args.index('targets') + 1)]) : emails(File.read(args[args.index('targets') + 1]))
+    get_emails args
+    get_cards args
   end
 
   # Build our list of email addresses to generate tokens for
-  def emails(list)
-    list = list.split "\n" unless list.class == Array
+  def get_emails(args)
+    args[args.index('targets') + 1].split(' ')[0].match(EMAIL) ? @options[:email] = args[(args.index('targets') + 1)].split(' ') : @options[:email] = File.read(args[args.index('targets') + 1]).split("\n")
+  end
 
-    @targets = list
+  # Grab all the card tokens
+  def get_cards(args)
+    args[args.index('cards') + 1].split(' ')[0].match(CARD) ? @options[:card] = args[(args.index('cards') + 1)].split(' ') : @options[:card] = File.read(args[args.index('cards') + 1]).split("\n")
   end
 
   # Need expiration as an integer
@@ -103,9 +108,26 @@ class ClientRunner
     args[args.index('headers') + 1].split(' ').each_with_index { |header, index| @site_params[0][HEADERS[index]] = header }
   end
 
+  # Generate multiple site tokens
+  def site_tokens
+    options = @options.clone
+
+    @options[:card].each_with_index do |card, index|
+      options[:card] = card
+      options[:email] = @options[:email][index]
+
+      site_token options
+    end
+  end
+
   # Generate a site token
-  def site_token
-    keys = security_key
+  def site_token(options = @options)
+    if options[:card].is_a? Array
+      site_tokens
+      return
+    end
+
+    keys = security_key(options)
 
     if keys.is_a? Array
       puts keys.map { |key| key.site_token @site_params[1], @site_params[0] }
@@ -114,11 +136,26 @@ class ClientRunner
     end
   end
 
-  # Generate an email token
-  def email_token
-    @options[:email] = @targets[0]
+  # Generate multiple email tokens
+  def email_tokens
+    options = @options.clone
 
-    keys = security_key
+    @options[:email].each_with_index do |email, index|
+      options[:email] = email
+      options[:card] = @options[:card][index] if @options[:card]
+
+      email_token options
+    end
+  end
+
+  # Generate an email token
+  def email_token(options = @options)
+    if options[:email].is_a? Array
+      email_tokens
+      return
+    end
+
+    keys = security_key(options)
 
     if keys.is_a? Array
       puts keys.map { |key| key.email_token }
@@ -128,8 +165,8 @@ class ClientRunner
   end
 
   # Get a security key object we can ask to generate keys for us.
-  def security_key
-    @session.security_key(@options)
+  def security_key(options = @options)
+    @session.security_key(options)
   end
 end
 

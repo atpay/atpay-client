@@ -10,6 +10,8 @@ module AtPay
     end
 
     def security_keys(options)
+      options = options.clone
+      
       options[:group] ||= "#{SecureRandom.uuid.gsub("-", "")}-#{Time.now.to_i}"
 
       keys = []
