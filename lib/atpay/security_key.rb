@@ -7,7 +7,7 @@ module AtPay
     def initialize(session, options)
       raise ArgumentError.new("email") unless options[:email].nil? or options[:email] =~ /.+@.+/
       raise ArgumentError.new("amount") unless options[:amount].is_a? Float
-      raise ArgumentError.new("card or email or member required") if options[:email].nil? and options[:card].nil? and options[:email].nil?
+      raise ArgumentError.new("card or email or member required") if options[:email].nil? and options[:card].nil? and options[:member].nil?
   
       @session = session
       @options = options
