@@ -20,7 +20,7 @@ module AtPay
     end
 
     def site_token(remote_addr, headers)
-      raise ArgumentError.new("card required for site tokens") if @options[:card].nil?
+      raise ArgumentError.new("card or member required for site tokens") if @options[:card].nil? and @options[:member].nil?
       "@#{Base64.strict_encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
     ensure
       @nonce = nil
