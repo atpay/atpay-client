@@ -7,7 +7,7 @@ module AtPay
     def initialize(session, options)
       raise ArgumentError.new("email") unless options[:email].nil? or options[:email] =~ /.+@.+/
       raise ArgumentError.new("amount") unless options[:amount].is_a? Float
-      raise ArgumentError.new("card or email required") if options[:email].nil? and options[:card].nil?
+      raise ArgumentError.new("card or email or member required") if options[:email].nil? and options[:card].nil? and options[:member].nil?
   
       @session = session
       @options = options
@@ -20,7 +20,7 @@ module AtPay
     end
 
     def site_token(remote_addr, headers)
-      raise ArgumentError.new("card required for site tokens") if @options[:card].nil?
+      raise ArgumentError.new("card or member required for site tokens") if @options[:card].nil? and @options[:member].nil?
       "@#{Base64.strict_encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
     ensure
       @nonce = nil
@@ -64,11 +64,15 @@ module AtPay
     end
 
     def target
-      card_format || @options[:email]
+      card_format || member_format || @options[:email]
     end
 
     def card_format
       "card<#{@options[:card]}>" if @options[:card]
+    end
+
+    def member_format
+      "member<#{@options[:member]}>" if @options[:member]
     end
 
     def expires
