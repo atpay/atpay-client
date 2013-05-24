@@ -22,6 +22,8 @@ module Usage
     Examples:
       ruby atpay-client.rb email_token targets bob@bob.com amount 8.0 expires 1454673223
       ruby atpay-client.rb email_token targets bob@bob.com group "8.0 9.5 23.28"
+      ruby atpay-client.rb email_token cards OGQ3OWE0OWNhMFFTL4mMpQA= amount 12.0
+      ruby atpay-client.rb email_token cards OGQ3OWE0OWNhMFFTL4mMpQA= targets bob@bob.com amount 12.0
 
 
     Required:
@@ -74,15 +76,23 @@ class ClientRunner
     convert_expiration
     get_emails args
     get_cards args
+
+    unless @options[:card] or @options[:email]
+      puts USAGE and exit
+    end
   end
 
   # Build our list of email addresses to generate tokens for
   def get_emails(args)
+    return unless args.index('targets')
+
     args[args.index('targets') + 1].split(' ')[0].match(EMAIL) ? @options[:email] = args[(args.index('targets') + 1)].split(' ') : @options[:email] = File.read(args[args.index('targets') + 1]).split("\n")
   end
 
   # Grab all the card tokens
   def get_cards(args)
+    return unless args.index('cards')
+
     args[args.index('cards') + 1].split(' ')[0].match(CARD) ? @options[:card] = args[(args.index('cards') + 1)].split(' ') : @options[:card] = File.read(args[args.index('cards') + 1]).split("\n")
   end
 
