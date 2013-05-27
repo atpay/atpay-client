@@ -2,6 +2,7 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'atpay'
 require 'yaml'
+require 'pry'
 
 
 class Arguments
@@ -25,6 +26,8 @@ module Usage
       ruby atpay-client.rb email_token cards OGQ3OWE0OWNhMFFTL4mMpQA= amount 12.0
       ruby atpay-client.rb email_token cards OGQ3OWE0OWNhMFFTL4mMpQA= targets bob@bob.com amount 12.0
 
+      ruby atpay-client.rb site_token cards OGQ3OWE0OWNhMFFTL4mMpQA= amount 5.0 user_agent "curl/7.9.8" lang "en-US,en;q=0.8" charset "utf8" addr 173.163.242.213
+
 
     Required:
       site_token|email_token    You must specify the type of token you wish to generate
@@ -36,8 +39,9 @@ module Usage
 
 
     Required (for site token):
-      headers                   The request header values for HTTP_USER_AGENT HTTP_ACCEPT_LANGUAGE
-                                and HTTP_ACCEPT_CHARSET
+      user_agent                The HTTP_USER_AGENT from the client's request header.
+      lang                      The HTTP_ACCEPT_LANGUAGE from the client's request header.
+      charset                   The HTTP_ACCEPT_CHARSET from the client's request header.
       addr                      The IP address corresponding to the requesting source (The user's IP)
 
 
@@ -71,7 +75,7 @@ class ClientRunner
       @options[option.to_sym] = args[args.index(option) + 1] unless args.grep(option).empty?
     end
 
-    site_params args
+    site_params args if ARGV[0] == 'site_token'
     convert_amounts
     convert_expiration
     get_emails args
@@ -111,11 +115,25 @@ class ClientRunner
 
   # Check our input for site params.
   def site_params(args)
-    return if args.grep('addr').empty? or args.grep('headers').empty?
+    if args.grep('addr').empty?
+      puts "You must provide an IP Address for a site token.\n" + USAGE
+      exit
+    end
 
     @site_params[1] = args[args.index('addr') + 1]
 
-    args[args.index('headers') + 1].split(' ').each_with_index { |header, index| @site_params[0][HEADERS[index]] = header }
+    headers(args)
+  end
+
+  def headers(args)
+    if args.grep('user_agent').empty? or args.grep('charset').empty? or args.grep('lang').empty?
+      puts "You must provide a user_agent, charset, and lang for a site token.\n" + USAGE
+      exit
+    end
+
+    @site_params[0][HEADERS[0]] = args[args.index('user_agent') + 1]
+    @site_params[0][HEADERS[1]] = args[args.index('lang') + 1]
+    @site_params[0][HEADERS[2]] = args[args.index('charset') + 1]
   end
 
   # Generate multiple site tokens
@@ -124,7 +142,7 @@ class ClientRunner
 
     @options[:card].each_with_index do |card, index|
       options[:card] = card
-      options[:email] = @options[:email][index]
+      options[:email] = @options[:email][index] if @options[:email]
 
       site_token options
     end
