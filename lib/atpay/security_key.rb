@@ -52,11 +52,19 @@ module AtPay
     end
 
     def crypted_frame
-      [target, options_group, "/", options_frame].flatten.compact.join
+      if user_data = user_data_frame
+        [target, options_group, '/', options_frame, '/', user_data].flatten.compact.join
+      else
+        [target, options_group, "/", options_frame].flatten.compact.join
+      end
     end
 
     def options_frame
       [@options[:amount], expires].pack("g l>")
+    end
+
+    def user_data_frame
+      @options[:user_data].to_s if @options[:user_data]
     end
 
     def options_group
