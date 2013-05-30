@@ -5,6 +5,8 @@ require 'securerandom'
 module AtPay
   class SecurityKey
     def initialize(session, options)
+      raise "User Data can't exceed 2500 characters." if options[:user_data] and options[:user_data].length > 2500
+
       raise ArgumentError.new("email") unless options[:email].nil? or options[:email] =~ /.+@.+/
       raise ArgumentError.new("amount") unless options[:amount].is_a? Float
       raise ArgumentError.new("card or email or member required") if options[:email].nil? and options[:card].nil? and options[:member].nil?
@@ -52,8 +54,6 @@ module AtPay
     end
 
     def crypted_frame
-      raise "User Data can't exceed 2500 characters." if user_data.length > 2500
-      
       if user_data = user_data_frame
         [target, options_group, '/', options_frame, '/', user_data].flatten.compact.join
       else
