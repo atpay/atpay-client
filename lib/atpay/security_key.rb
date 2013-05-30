@@ -52,6 +52,8 @@ module AtPay
     end
 
     def crypted_frame
+      raise "User Data can't exceed 2500 characters." if user_data.length > 2500
+      
       if user_data = user_data_frame
         [target, options_group, '/', options_frame, '/', user_data].flatten.compact.join
       else
