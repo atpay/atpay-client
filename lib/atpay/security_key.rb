@@ -80,7 +80,7 @@ module AtPay
     end
 
     def boxer
-      Crypto::Box.new(@session.config.atpay_public_key, @session.config.private_key)
+      @session.boxer
     end
 
     def nonce

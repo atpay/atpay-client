@@ -33,4 +33,8 @@ describe AtPay::Session do
     session.security_key(:amount => [20.00, 30.00],
       :email => "james@example.com").length.should eq(2)
   end
+
+  it "Returns a box and caches it" do
+    session.boxer.object_id.should eq(session.boxer.object_id)
+  end
 end
