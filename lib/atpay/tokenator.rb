@@ -2,6 +2,9 @@ module AtPay
   class Tokenator
     attr_reader :token, :payload, :source, :amount, :expires
 
+    # A bit clunky but useful for testing token decomposition.
+    # If you provide a session then the config values there will
+    # be used so that decryption will function.
     def initialize(token, session = nil)
       @token = token
       @session = session

@@ -9,4 +9,5 @@ task "ci:sodium" => "lib/libsodium.so"
 
 task :ci => %w(ci:sodium spec)
 
+
 CLEAN.add "lib/libsodium.*"

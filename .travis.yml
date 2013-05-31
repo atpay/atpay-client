@@ -1,4 +1,4 @@
 language: ruby
-script: bundle exec rspec spec
-script: "LD_LIBRARY_PATH=lib bundle exec rake ci"
-#
+
+before_script: "LD_LIBRARY_PATH=lib bundle exec rake ci"
+script: "LD_LIBRARY_PATH=lib bundle exec rspec spec"
