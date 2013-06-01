@@ -3,8 +3,9 @@ module AtPay
     attr_reader :token, :payload, :source, :amount, :expires
 
     # A bit clunky but useful for testing token decomposition.
-    # If you provide a session then the config values there will
-    # be used so that decryption will function.
+    # If you provide a test session then the config values there 
+    # will be used so that decryption will function without @Pay's
+    # private key.
     def initialize(token, session = nil)
       @token = token
       @session = session
@@ -48,7 +49,7 @@ module AtPay
     # pull the ip address and header sha out of the token.
     def browser_data(key)
       length = @token.slice!(0, 4).unpack("l>")[0]
-      @site_frame = boxer(key).open @token.slice!(0, length)
+      @site_frame = boxer(key).open(nonce, @token.slice!(0, length))
 
       length = @token.slice!(0, 4).unpack("l>")[0]
       @ip = @token.slice!(0, length)
@@ -62,7 +63,7 @@ module AtPay
     def to_h
       {
         sale_price: @amount,
-        expires_at: @expires ? Time.at(@expires) : (Time.now + 2.weeks),
+        expires_at: Time.at(@expires),
         group: @group,
         encoded_key: @checksum
       }

@@ -22,7 +22,7 @@ module Setup
     build_session.security_key({
       amount: amount,
       email: target
-    }.merge(options)).send(type.to_sym).to_s
+    }.merge(options)).send(*type).to_s
   end
 
   def build_session
