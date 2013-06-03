@@ -10,12 +10,21 @@ module AtPay
       @token = token
       @session = session
       strip_version
+
+      @checksum = Digest::SHA1.hexdigest(token) # Before or after removing version?
     end
 
     class << self
       # Get the version of the given token.
       def token_version(token)
         token.scan('-').empty? ? 0 : unpack_version(token.split('-')[0])
+      end
+
+      # Check and make sure we haven't seen this token before.
+      def find_by_checksum(token)
+        checksum = Digest::SHA1.hexdigest(token)
+
+        SecurityKey.find_by_encoded_key(checksum) || ValidationToken.find_by_encoded_key(checksum)
       end
 
 
@@ -152,13 +161,6 @@ module AtPay
       @amount = @amount_expiration.slice!(0, 4).unpack("g")[0]
       @expires = @amount_expiration.slice!(0, 4).unpack("l>")[0]
       #@mappings = @amount_expiration.unpack("Q>" * (packed.length / 8)).collect { |m| OpportunityMap.find(m).opportunity }
-    end
-
-    # Check and make sure we haven't seen this token before.
-    def find_by_checksum
-      @checksum = Digest::SHA1.hexdigest(@token)
-
-      SecurityKey.find_by_encoded_key(@checksum) || ValidationToken.find_by_encoded_key(@checksum)
     end
   end
 end
