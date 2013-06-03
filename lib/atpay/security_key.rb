@@ -74,7 +74,7 @@ module AtPay
     end
 
     def target
-      card_format || member_format || @options[:email]
+      card_format || member_format || email_format
     end
 
     def card_format
@@ -83,6 +83,10 @@ module AtPay
 
     def member_format
       "member<#{@options[:member]}>" if @options[:member]
+    end
+
+    def email_format
+      "email<#{@options[:email]}>" if @options[:email]
     end
 
     def expires

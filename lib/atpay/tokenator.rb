@@ -1,6 +1,6 @@
 module AtPay
   class Tokenator
-    attr_reader :token, :payload, :source, :amount, :expires
+    attr_reader :token, :payload, :source, :amount, :expires, :user_data
 
     # A bit clunky but useful for testing token decomposition.
     # If you provide a test session then the config values there 
@@ -56,7 +56,7 @@ module AtPay
     end
 
     def source
-      @target
+      {email: @email, card: @card, member: @member}
     end
 
     # Return parts in a hash structure, handy for ActiveRecord.
@@ -129,13 +129,13 @@ module AtPay
     def target(target)
       case target
       when /card<(.*?)>/
-        @target = CreditCard.where(atpay_token: $1)[0]
+        @card = $1
         @payload.slice!(0, ($1.length + 7))
       when /email<(.*?)>/
-        @target = $1
+        @email = $1
         @payload.slice!(0, ($1.length + 8))
       when /member<(.*?)>/
-        @target = Member.find($1)
+        @member = $1
         @payload.slice!(0, ($1.length + 9))
       else
         raise "No target found"

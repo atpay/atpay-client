@@ -18,10 +18,9 @@ module Setup
   let(:public_key)      { Base64.strict_encode64(keys[0]) }
   let(:private_key)     { Base64.strict_encode64(keys[1]) }
 
-  def token(target, amount, type, options = {})
+  def token(amount, type, options = {})
     build_session.security_key({
       amount: amount,
-      email: target
     }.merge(options)).send(*type).to_s
   end
 
