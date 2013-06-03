@@ -11,7 +11,7 @@ describe AtPay::Tokenator do
   let(:payment) { AtPay::Tokenator.new token(50.00, [:email_token], {email: 'email@address'}), build_session }
   let(:site) { AtPay::Tokenator.new token(50.00, [:site_token, ip, headers], {card: 'OGQ3OWE0OWNhMFFTL4mMpQA='}), build_session }
   let(:user_data) { AtPay::Tokenator.new token(50.00, [:email_token], {email: 'email@address', user_data: 'lots of pills, paying forever'}), build_session }
-  let(:validation) { AtPay::Tokenator.new build_session, token() }
+  let(:versioned) { AtPay::Tokenator.new token(50.00, [:email_token], {email: 'email@address', version: 2}), build_session }
 
   describe "Parsing" do
     describe "Payment Tokens" do
@@ -71,6 +71,20 @@ describe AtPay::Tokenator do
         user_data.body(Base64.decode64(public_key))
 
         user_data.user_data.should eq('lots of pills, paying forever')
+      end
+    end
+
+    describe "Versioning" do
+      let(:versioned) { token(50.00, [:email_token], {email: 'email@address', version: 2}) }
+
+      it "Extracts the version" do
+        AtPay::Tokenator.token_version(versioned).should eq(2)
+      end
+
+      it "Returns 0 when there is no version" do
+        test_token = token(50.00, [:email_token], {email: 'email@address'})
+
+        AtPay::Tokenator.token_version(test_token).should eq(0)
       end
     end
   end

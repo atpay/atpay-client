@@ -5,25 +5,26 @@ require 'securerandom'
 module AtPay
   class SecurityKey
     def initialize(session, options)
-      raise "User Data can't exceed 2500 characters." if options[:user_data] and options[:user_data].length > 2500
-
+      raise ArgumentError.new("User Data can't exceed 2500 characters.") if options[:user_data] and options[:user_data].length > 2500
       raise ArgumentError.new("email") unless options[:email].nil? or options[:email] =~ /.+@.+/
       raise ArgumentError.new("amount") unless options[:amount].is_a? Float
       raise ArgumentError.new("card or email or member required") if options[:email].nil? and options[:card].nil? and options[:member].nil?
-  
+
       @session = session
       @options = options
+
+      set_version
     end
 
     def email_token
-      "@#{Base64.strict_encode64([nonce, partner_frame, body_frame].join)}"
+      "@#{@version}#{Base64.strict_encode64([nonce, partner_frame, body_frame].join)}"
     ensure
       @nonce = nil
     end
 
     def site_token(remote_addr, headers)
       raise ArgumentError.new("card or member required for site tokens") if @options[:card].nil? and @options[:member].nil?
-      "@#{Base64.strict_encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
+      "@#{@version}#{Base64.strict_encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
     ensure
       @nonce = nil
     end
@@ -32,7 +33,12 @@ module AtPay
       email_token
     end
 
+
     private
+    def set_version
+      @version = Base64.strict_encode64([@options[:version]].pack("Q>")) + '-' if @options[:version]
+    end
+
     def partner_frame
       [@session.config.partner_id].pack("Q>")
     end

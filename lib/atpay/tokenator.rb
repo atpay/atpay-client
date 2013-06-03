@@ -15,7 +15,7 @@ module AtPay
     class << self
       # Get the version of the given token.
       def token_version(token)
-        token.scan('-') ? unpack_version(token.split('-')[0]) : 0
+        token.scan('-').empty? ? 0 : unpack_version(token.split('-')[0])
       end
 
 
@@ -23,7 +23,7 @@ module AtPay
 
       # Unpack the actual version value.
       def unpack_version(version)
-        version.unpack("Q>")[0]
+        Base64.decode64(version[1..-1]).unpack("Q>")[0]
       end
     end
     
