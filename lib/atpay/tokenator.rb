@@ -21,6 +21,7 @@ module AtPay
       end
 
       # Check and make sure we haven't seen this token before.
+      # NOTE: This is really for internal use by @Pay.
       def find_by_checksum(token)
         checksum = Digest::SHA1.hexdigest(token)
 

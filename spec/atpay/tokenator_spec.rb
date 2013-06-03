@@ -2,7 +2,6 @@ require 'atpay'
 require 'rbnacl'
 require 'base64'
 require 'helper'
-require 'pry'
 
 describe AtPay::Tokenator do
   let(:headers) { {'HTTP_USER_AGENT' => 'agent', 'HTTP_ACCEPT_LANGUAGE' => 'lang', 'HTTP_ACCEPT_CHARSET' => 'charset'} }

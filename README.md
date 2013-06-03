@@ -100,6 +100,6 @@ You can pass in arbitrary data that will be returned to you upon the successful 
 @key = session.security_key({
   :amount    => 20.00,
   :email     => 'email@address',
-  :user_data => '{ custom: data, lives: here }'
+  :user_data => "{ sku: '82', cid: '3', notes: 'expedited' } "
 })
 ```
