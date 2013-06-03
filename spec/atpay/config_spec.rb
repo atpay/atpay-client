@@ -56,12 +56,8 @@ describe AtPay::Config do
     end
 
     it "defaults to sandbox" do
-      config.instance_eval do
-        @atpay_public_key = nil
-      end
-
-      config.should_receive(:environment=).with(:sandbox)
-      config.atpay_public_key
+      AtPay::Config.any_instance.should_receive(:environment=).with(:sandbox)
+      config = AtPay::Config.new({})
     end
   end
 end

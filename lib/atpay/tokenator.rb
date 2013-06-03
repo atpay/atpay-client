@@ -107,7 +107,7 @@ module AtPay
 
     def boxer(key)
       if @session
-        Crypto::Box.new(key, Base64.decode64(@session.config.atpay_private_key))
+        Crypto::Box.new(key, @session.config.atpay_private_key)
       else
         Crypto::Box.new(key, ENCRYPTION[:security_key_sec])
       end
