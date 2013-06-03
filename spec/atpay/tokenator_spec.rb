@@ -12,8 +12,16 @@ describe AtPay::Tokenator do
   let(:site) { AtPay::Tokenator.new token(50.00, [:site_token, ip, headers], {card: 'OGQ3OWE0OWNhMFFTL4mMpQA='}), build_session }
   let(:user_data) { AtPay::Tokenator.new token(50.00, [:email_token], {email: 'email@address', user_data: 'lots of pills, paying forever'}), build_session }
   let(:version) { AtPay::Tokenator.new token(50.00, [:email_token], {email: 'email@address', version: 2}), build_session }
+  let(:member) { AtPay::Tokenator.new token(50.00, [:email_token], {member: '4DF08A79-C16C-4842-AA1B-AE878C9C6C2C'}), build_session }
+  let(:group) { AtPay::Tokenator.new token(50.00, [:email_token], {member: '4DF08A79-C16C-4842-AA1B-AE878C9C6C2C', group: '18', user_data: 'hello from data'}), build_session }
 
   describe "Parsing" do
+    it "Uses the key specified in ENCRYPTION if not given a session" do
+      tokenator = AtPay::Tokenator.new token(50.0, [:email_token], {email: 'email@address'})
+
+      expect { tokenator.send(:boxer, Base64.decode64(public_key)) }.to raise_error
+    end
+
     describe "Payment Tokens" do
       it "Extracts the partner" do
         payment.header
@@ -35,6 +43,27 @@ describe AtPay::Tokenator do
         payment.body(Base64.decode64(public_key))
 
         payment.to_h.should be_a(Hash)
+      end
+
+      it "Processes a member token" do
+        member.header
+        member.body(Base64.decode64(public_key))
+
+        member.source[:member].should eq('4DF08A79-C16C-4842-AA1B-AE878C9C6C2C')
+      end
+
+      it "Processes a token with a group" do
+        group.header
+        group.body(Base64.decode64(public_key))
+
+        group.group.should eq('18')
+        group.user_data.should eq('hello from data')
+      end
+    end
+
+    describe "Exceptions" do
+      it "Raises target not found if there is no valid target" do
+        expect { payment.send :target, 'mom' }.to raise_error
       end
     end
 
@@ -92,6 +121,22 @@ describe AtPay::Tokenator do
         version.body(Base64.decode64(public_key))
 
         version.amount.should eq(50.0)
+      end
+    end
+
+    describe "Checksum lookup" do
+      before do
+        class AtPay::SecurityKey; end
+        class AtPay::ValidationToken; end
+
+        AtPay::SecurityKey.should_receive(:find_by_encoded_key)
+        AtPay::ValidationToken.should_receive(:find_by_encoded_key)
+      end
+
+      it "should look for a token with a matching checksum" do
+        token = token(50.0, [:email_token], {email: 'email@address'})
+
+        AtPay::Tokenator.find_by_checksum(token)
       end
     end
   end
