@@ -10,3 +10,4 @@ gem 'simplecov', :require => false, :group => :test
 gem 'bundler'
 gem 'rake'
 gem 'pry'
+gem 'coveralls', require: false

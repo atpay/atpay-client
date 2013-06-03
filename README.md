@@ -91,3 +91,15 @@ be processed:
 
 # returns array length == 3
 ```
+
+## User Data
+
+You can pass in arbitrary data that will be returned to you upon the successful parsing of a token in @Pay's system.  There is a limit of 2500 characters on this argument.  It is expected to be a string beyond that any formatting should be returned as it was received.
+
+```ruby
+@key = session.security_key({
+  :amount    => 20.00,
+  :email     => 'email@address',
+  :user_data => '{ custom: data, lives: here }'
+})
+```

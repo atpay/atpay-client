@@ -1,6 +1,9 @@
 require 'simplecov'
 SimpleCov.start
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'rubygems'
 require 'bundler/setup'
 require 'atpay'
