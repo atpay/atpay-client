@@ -1,4 +1,11 @@
 require 'simplecov'
+require 'coveralls'
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov::Formatter::HTMLFormatter,
+  Coveralls::SimpleCov::Formatter
+]
+
 SimpleCov.start
 
 require 'rubygems'
@@ -17,6 +24,21 @@ module Setup
   }
   let(:public_key)      { Base64.strict_encode64(keys[0]) }
   let(:private_key)     { Base64.strict_encode64(keys[1]) }
+
+  def token(amount, type, options = {})
+    build_session.security_key({
+      amount: amount,
+    }.merge(options)).send(*type).to_s
+  end
+
+  def build_session
+    AtPay::Session.new({
+      public_key: public_key,
+      private_key: private_key,
+      partner_id: partner_id,
+      environment: :test
+    })
+  end
 end
 
 RSpec.configure do |r|

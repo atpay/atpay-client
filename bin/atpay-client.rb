@@ -2,7 +2,6 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'atpay'
 require 'yaml'
-require 'pry'
 
 
 class Arguments
