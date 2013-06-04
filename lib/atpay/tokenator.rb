@@ -1,6 +1,13 @@
 module AtPay
   class Tokenator
-    attr_reader :token, :payload, :source, :amount, :expires, :group, :user_data
+    attr_reader :token, 
+      :payload,
+      :partner_id, 
+      :source, 
+      :amount, 
+      :expires, 
+      :group, 
+      :user_data
 
     # A bit clunky but useful for testing token decomposition.
     # If you provide a test session then the config values there 
