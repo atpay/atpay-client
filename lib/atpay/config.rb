@@ -26,7 +26,7 @@ module AtPay
         self.send("#{k.to_s}=", v)
       end
 
-      unless options[:environment]
+      unless options[:environment] or (atpay_private_key and atpay_public_key)
         self.environment = :sandbox
       end
     end
