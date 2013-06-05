@@ -5,23 +5,24 @@ require 'securerandom'
 module AtPay
   class SecurityKey
     def initialize(session, options)
+      raise ArgumentError.new("User Data can't exceed 2500 characters.") if options[:user_data] and options[:user_data].length > 2500
       raise ArgumentError.new("email") unless options[:email].nil? or options[:email] =~ /.+@.+/
       raise ArgumentError.new("amount") unless options[:amount].is_a? Float
       raise ArgumentError.new("card or email or member required") if options[:email].nil? and options[:card].nil? and options[:member].nil?
-  
+
       @session = session
       @options = options
     end
 
     def email_token
-      "@#{Base64.strict_encode64([nonce, partner_frame, body_frame].join)}"
+      "@#{version}#{Base64.strict_encode64([nonce, partner_frame, body_frame].join)}"
     ensure
       @nonce = nil
     end
 
     def site_token(remote_addr, headers)
       raise ArgumentError.new("card or member required for site tokens") if @options[:card].nil? and @options[:member].nil?
-      "@#{Base64.strict_encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
+      "@#{version}#{Base64.strict_encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
     ensure
       @nonce = nil
     end
@@ -30,7 +31,12 @@ module AtPay
       email_token
     end
 
+
     private
+    def version
+      @options[:version] ? (Base64.strict_encode64([@options[:version]].pack("Q>")) + '-') : nil
+    end
+
     def partner_frame
       [@session.config.partner_id].pack("Q>")
     end
@@ -52,11 +58,19 @@ module AtPay
     end
 
     def crypted_frame
-      [target, options_group, "/", options_frame].flatten.compact.join
+      if user_data = user_data_frame
+        [target, options_group, '/', options_frame, '/', user_data].flatten.compact.join
+      else
+        [target, options_group, "/", options_frame].flatten.compact.join
+      end
     end
 
     def options_frame
       [@options[:amount], expires].pack("g l>")
+    end
+
+    def user_data_frame
+      @options[:user_data].to_s if @options[:user_data]
     end
 
     def options_group
@@ -64,7 +78,7 @@ module AtPay
     end
 
     def target
-      card_format || member_format || @options[:email]
+      card_format || member_format || email_format
     end
 
     def card_format
@@ -73,6 +87,10 @@ module AtPay
 
     def member_format
       "member<#{@options[:member]}>" if @options[:member]
+    end
+
+    def email_format
+      "email<#{@options[:email]}>" if @options[:email]
     end
 
     def expires

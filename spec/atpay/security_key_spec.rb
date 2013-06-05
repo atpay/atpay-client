@@ -52,5 +52,9 @@ describe AtPay::SecurityKey do
     it "returns a key with a group" do
       key = AtPay::SecurityKey.new(session, {:email => "james@atpay.com", :amount => 25.00, :group => "1234"}).to_s
     end
+
+    it "returns a key with user_data" do
+      key = AtPay::SecurityKey.new(session, {:email => "glen@atpay.com", :amount => 25.00, :user_data => 'bacon and eggs'}).to_s
+    end
   end
 end
