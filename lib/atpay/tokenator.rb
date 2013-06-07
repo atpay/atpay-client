@@ -132,7 +132,7 @@ module AtPay
         @group, @amount_expiration, @user_data = frames
       else
         target @payload.split('/').first
-        @amount_expiration, @user_data = frames
+        @payload.match(/\//) ? (@amount_expiration, @user_data = frames) : (@amount_expiration = @payload)
       end
     end
 
