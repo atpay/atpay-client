@@ -52,7 +52,6 @@ module AtPay
     def body(key)
       payload(nonce, key, @token)
       part_out_payload
-      unpack
     end
 
     # With a site token you want to call this after header.  It will
@@ -120,18 +119,41 @@ module AtPay
 
     # Break the payload out into it's constituent logical parts.
     def part_out_payload
+      # TARGET:GROUP/AMOUNTEXPIRATION/USERDATA
+      # TARGET:GROUP/AMOUNTEXPIRATION
+      # TARGET:/AMOUNTEXPIRATION (?)
+      # TARGET/AMOUNTEXPIRATION/USERDATA
+      # TARGET/AMOUNTEXPIRATION
       if @payload.match ':'
-        target @payload.split(':').first
-        @group, @amount_expiration, @user_data = frames
+        raw_target, @group = @payload.split(':', 2)
       else
-        target @payload.split('/').first
-        @amount_expiration, @user_data = frames
+        raw_target = @payload
       end
+
+      target raw_target
+
+      if @group
+        @group = @payload.slice!(0, @group.index("/")) 
+        @payload.slice!(0, 1)
+      end
+      
+      @amount = parse_amount!
+      @expiration = parse_expiration!
+      @user_data = parse_user_data!
     end
 
-    # Find all the frame pieces.  However many there may be.
-    def frames
-      @payload.split('/')
+    def parse_amount!
+      @amount = @payload.slice!(0, 4).unpack("g")[0]
+    end
+
+    def parse_expiration!
+      @expires = @payload.slice!(0, 4).unpack("l>")[0]
+    end
+
+    def parse_user_data!
+      @user_data = @payload[1..-1]
+      @payload = nil
+      return @user_data
     end
 
     # Find the target of the token.  This could be a Credit Card
@@ -150,18 +172,6 @@ module AtPay
       else
         raise "No target found"
       end
-    end
-
-    # Unpack handles unpacking all the specific frames
-    def unpack
-      unpack_amount_expiration
-    end
-
-    # Unpack the frame containing the amount and expiration value if given.
-    def unpack_amount_expiration
-      @amount = @amount_expiration.slice!(0, 4).unpack("g")[0]
-      @expires = @amount_expiration.slice!(0, 4).unpack("l>")[0]
-      #@mappings = @amount_expiration.unpack("Q>" * (packed.length / 8)).collect { |m| OpportunityMap.find(m).opportunity }
     end
   end
 end
