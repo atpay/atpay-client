@@ -131,7 +131,7 @@ module AtPay
       # TARGET:/AMOUNTEXPIRATION (?)
       # TARGET/AMOUNTEXPIRATION/USERDATA
       # TARGET/AMOUNTEXPIRATION
-      if @payload.match ':'
+      if @payload.match '>:'
         raw_target, @group = @payload.split(':', 2)
       else
         raw_target = @payload
