@@ -6,7 +6,8 @@ module AtPay
       :source, 
       :amount, 
       :expires, 
-      :group, 
+      :group,
+      :site_frame,
       :user_data
 
     # A bit clunky but useful for testing token decomposition.
