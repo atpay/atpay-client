@@ -38,7 +38,7 @@ module AtPay
     def environment=(v)
       @environment = v
 
-      raise ValueError unless [:production, :sandbox, :test].include? v
+      raise ValueError unless [:production, :sandbox, :development, :test].include? v
 
       @atpay_public_key = Base64.decode64({
         production: "QZuSjGhUz2DKEvjule1uRuW+N6vCOoMuR2PgCl57vB0=",
