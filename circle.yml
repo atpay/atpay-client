@@ -4,3 +4,6 @@ dependencies:
     - tar -xvzf libsodium-0.4.1.tar.gz
     - cd libsodium-0.4.1 && ./configure && make
     - cp libsodium-0.4.1/src/libsodium/.libs/libsodium.so ./lib/
+
+  environment:
+    LD_LIBRARY_PATH: lib
