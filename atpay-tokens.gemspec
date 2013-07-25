@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
-  s.name        = 'atpay'
-  s.version     = '0.0.1'
-  s.date        = '2013-03-08'
-  s.summary     = "@Pay OAuth2.0 API Client"
+  s.name        = 'atpay-tokens'
+  s.version     = '0.0.5'
+  s.date        = '2013-07-25'
+  s.summary     = "@Pay Token Generator"
   s.description = "Client interface for the @Pay API, key generation for performance optimization"
-  s.authors     = ["James Kassemi"]
+  s.authors     = ["James Kassemi", "Glen Holcomb"]
   s.email       = 'james@atpay.com'
   s.files       = `git ls-files`.split($/)
   s.test_files  = s.files.grep(%r{^(test|spec|features)/})
