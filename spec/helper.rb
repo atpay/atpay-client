@@ -1,5 +1,5 @@
 require 'simplecov'
-require 'coveralls'
+require 'coveralls' unless ENV['SKIP_COVERALLS'] == 'true'
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   SimpleCov::Formatter::HTMLFormatter,
