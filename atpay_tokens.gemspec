@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files`.split($/)
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.homepage      = "https://atpay.com"
-  s.executables   << 'atpay-client'
+  s.executables   << 'atpay_tokens'
   s.add_runtime_dependency 'ffi'
   s.add_runtime_dependency 'rbnacl'
   s.add_runtime_dependency 'yaml'
