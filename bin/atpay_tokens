@@ -22,12 +22,12 @@ module Usage
 
 
     Examples:
-      ruby atpay-client.rb email_token targets bob@bob.com amount 8.0 expires 1454673223
-      ruby atpay-client.rb email_token targets bob@bob.com group "8.0 9.5 23.28"
-      ruby atpay-client.rb email_token cards OGQ3OWE0OWNhMFFTL4mMpQA= amount 12.0
-      ruby atpay-client.rb email_token cards OGQ3OWE0OWNhMFFTL4mMpQA= targets bob@bob.com amount 12.0
+      atpay_tokens email_token targets bob@bob.com amount 8.0 expires 1454673223
+      atpay_tokens email_token targets bob@bob.com group "8.0 9.5 23.28"
+      atpay_tokens email_token cards OGQ3OWE0OWNhMFFTL4mMpQA= amount 12.0
+      atpay_tokens email_token cards OGQ3OWE0OWNhMFFTL4mMpQA= targets bob@bob.com amount 12.0
 
-      ruby atpay-client.rb site_token cards OGQ3OWE0OWNhMFFTL4mMpQA= amount 5.0 user_agent "curl/7.9.8" lang "en-US,en;q=0.8" charset "utf8" addr 173.163.242.213
+      atpay_tokens site_token cards OGQ3OWE0OWNhMFFTL4mMpQA= amount 5.0 user_agent "curl/7.9.8" lang "en-US,en;q=0.8" charset "utf8" addr 173.163.242.213
 
 
     Required:
