@@ -19,12 +19,12 @@ ruby >= 1.9
 
 ## Installation
 
-Add the 'atpay-client' gem to your Gemfile:
+Add the 'atpay_tokens' gem to your Gemfile:
 
 ```ruby
 #Gemfile
 
-gem 'atpay', :github => "atpay/atpay-client"
+gem 'atpay_tokens', :github => "atpay/atpay-client"
 ```
 
 ## Configuration
@@ -86,7 +86,7 @@ option names above. For instance, to pass a CSV with amount, card tokens,
 user_data, and email address:
 
 ```
-  $ atpay-client --private-key="XYZ" --partner-id=999 --type=email < data.csv
+  $ atpay_tokens --private-key="XYZ" --partner-id=999 --type=email < data.csv
 ```
 
 ```
