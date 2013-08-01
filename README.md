@@ -13,14 +13,18 @@ Interfaces here are implemented after receiving OAuth 2.0
 privileges for the partner/user record. You cannot authenticate
 directly to the API with this library at this moment.
 
+## Requirements
+
+ruby >= 1.9
+
 ## Installation
 
-Add the 'atpay-client' gem to your Gemfile:
+Add the 'atpay_tokens' gem to your Gemfile:
 
 ```ruby
 #Gemfile
 
-gem 'atpay', :github => "atpay/atpay-client"
+gem 'atpay_tokens', :github => "atpay/atpay-client"
 ```
 
 ## Configuration
@@ -40,6 +44,63 @@ session = AtPay::Session.new({
   :private_key  => "YYY"        # Provided private key
 })
 ```
+
+## Command Line Usage
+
+    $ atpay-client --help
+
+
+### Parameters
+
+    atpay-token-generator v2.0
+    Options:
+                 --private-key, -p <s>:   [global] The private key given to you by @Pay
+                  --public-key, -u <s>:   [global] @Pay's public key, given to you by @Pay
+                  --partner-id, -a <i>:   [global] The partner ID given to you by @Pay
+                 --environment, -e <s>:   [global] The environment you want to generate buttons for. Currently sandbox or production (default: production)
+                      --config, -c <s>:   [global] The path to a configuration file in yml format
+                        --type, -t <s>:   [global] The type of token to generate (site,email)
+                        --card, -r <s>:   [site-token, email-token] The card token associated with the recipient of this token. If `type` is site, this must be present
+                       --email, -m <s>:   [email-token] The email associated with the receipt of this token. Incomptible when `type` is 'site'
+                      --amount, -o <f>:   [token] The amount a user should be charged for the transaction you're generating a token for (default: 5.0)
+                   --user-data, -s <s>:   [token] Data to pass back as a reference
+                     --expires, -x <i>:   [token] Expiration date for token, integer value of seconds since epoch
+           --header-user-agent, -h <s>:   [site-token] The HTTP_USER_AGENT from the client's request header (if `type` is 'site')
+      --header-accept-language, -d <s>:   [site-token] The HTTP_ACCEPT_LANGUAGE from the client's request header (if `type` is 'site')
+           --header-accept-charset <s>:   [site-token] The HTTP_ACCEPT_CHARSET from the client's request header (if `type` is 'site')
+                  --ip-address, -i <s>:   [site-token] The IP address of the token recipient (if `type` is 'site')
+                         --version, -v:   Print version and exit
+                            --help, -l:   Show this message
+
+* Parameters marked as [global] must be passed on the command line
+* Parameters marked with [site-token] are required for site tokens
+* Parameters marked with [email-token] are required for email tokens
+* Parameters marked with [token] are accepted for both site and email tokens
+
+### CSV via STDIN
+
+All token arguments (arguments not marked as [global]) may be passed
+to the command line utility via STDIN in CSV format. The first line of
+the incoming CSV must be the headers for each column, using the full
+option names above. For instance, to pass a CSV with amount, card tokens,
+user_data, and email address:
+
+```
+  $ atpay_tokens --private-key="XYZ" --partner-id=999 --type=email < data.csv
+```
+
+```
+  amount,user-data,card,email
+  50.00,refid1,XbsfrYUjAHh0lWSoWS0q3ahIpxohpcM=,james@example.com
+  100.00,refid2,XbsfrYUjAHh0lWSoWS0q3ahIpxohpcM=,james@example.com
+  200.00,refid3,XbsfrYUjAHh0lWSoWS0q3ahIpxohpcM=,james@example.com
+```
+
+The above will print 3 tokens for amounts between 50 and 200 dollars,
+all to charge the same credit card at the same email address. 
+
+If you need to change the keys, partner id, or type, you'll need to
+start a new instance of the utility for each change.
 
 ## Usage
 
