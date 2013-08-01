@@ -1,4 +1,4 @@
-require 'atpay'
+require 'atpay_tokens'
 require 'rbnacl'
 require 'base64'
 require 'helper'

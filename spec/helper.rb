@@ -10,7 +10,7 @@ SimpleCov.start
 
 require 'rubygems'
 require 'bundler/setup'
-require 'atpay'
+require 'atpay_tokens'
 require 'rspec/core/shared_context'
 
 module Setup

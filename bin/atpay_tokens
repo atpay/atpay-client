@@ -1,16 +1,14 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
-
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
-require 'atpay'
+require 'atpay_tokens'
 require 'yaml'
 require 'csv'
 require 'trollop'
 
 $opts = Trollop::options do
-  version "atpay-token-generator v0.2"
+  version "atpay-token-generator v2.0"
 
   # Global
   opt :private_key, "[global] The private key given to you by @Pay", :type => :string
