@@ -52,7 +52,7 @@ session = AtPay::Session.new({
 
 ### Parameters
 
-    atpay-token-generator v0.2
+    atpay-token-generator v2.0
     Options:
                  --private-key, -p <s>:   [global] The private key given to you by @Pay
                   --public-key, -u <s>:   [global] @Pay's public key, given to you by @Pay
