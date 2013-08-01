@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.email       = 'james@atpay.com'
   s.files       = `git ls-files`.split($/)
   s.test_files  = s.files.grep(%r{^(test|spec|features)/})
-  s.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  s.executables  = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
   s.homepage    = "https://atpay.com"
   s.add_dependency "rbnacl"
   s.add_dependency "trollop"
