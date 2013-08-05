@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'atpay_tokens'
-  s.version       = '2.0.0'
+  s.version       = '2.0.2'
   s.date          = '2013-07-25'
   s.summary       = "@Pay Token Generator"
   s.description   = "Client interface for the @Pay API, key generation for performance optimization"

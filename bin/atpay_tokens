@@ -132,7 +132,13 @@ class Generator
     if email?
       security_key.email_token
     elsif site?
-      security_key.site_token
+      headers = {
+        "HTTP_USER_AGENT" => options[:header_user_agent],
+        "HTTP_ACCEPT_LANGUAGE" => options[:header_accept_language],
+        "HTTP_ACCEPT_CHARSET" => options[:header_accept_charset]
+      }
+
+      security_key.site_token(options[:ip_address], headers)
     end
   end
 
