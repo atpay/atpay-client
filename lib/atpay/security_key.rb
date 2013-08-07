@@ -8,7 +8,7 @@ module AtPay
       raise ArgumentError.new("User Data can't exceed 2500 characters.") if options[:user_data] and options[:user_data].length > 2500
       raise ArgumentError.new("email") unless options[:email].nil? or options[:email] =~ /.+@.+/
       raise ArgumentError.new("amount") unless options[:amount].is_a? Float
-      raise ArgumentError.new("card or email or member required") if options[:email].nil? and options[:card].nil? and options[:member].nil?
+      raise ArgumentError.new("card or email or member or url required") if options[:email].nil? and options[:card].nil? and options[:member].nil? and options[:url].nil?
 
       @session = session
       @options = options
@@ -78,19 +78,11 @@ module AtPay
     end
 
     def target
-      card_format || member_format || email_format
+      format_target [:card, :member, :email, :url].select { |key| @options[key] }.first
     end
 
-    def card_format
-      "card<#{@options[:card]}>" if @options[:card]
-    end
-
-    def member_format
-      "member<#{@options[:member]}>" if @options[:member]
-    end
-
-    def email_format
-      "email<#{@options[:email]}>" if @options[:email]
+    def format_target(key)
+      "#{key.to_s}<#{@options[key]}>"
     end
 
     def expires

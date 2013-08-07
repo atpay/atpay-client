@@ -42,6 +42,40 @@ describe AtPay::SecurityKey do
         })
       }.to raise_error
     end
+
+    it "fails when not given an email or card or member or url" do
+      expect {
+        AtPay::SecurityKey.new(session, {
+          amount: 25.00
+        })
+      }.to raise_error
+    end
+  end
+
+  describe "#target" do
+    it "builds a card string if card option given" do
+      for_card = AtPay::SecurityKey.new(session, amount: 25.0, card: 'fakecardtoken')
+
+      expect(for_card.send(:target)).to eq("card<fakecardtoken>")
+    end
+
+    it "builds an email string if email option given" do
+      for_email = AtPay::SecurityKey.new(session, amount: 25.0, email: 'bob@bob')
+
+      expect(for_email.send(:target)).to eq("email<bob@bob>")
+    end
+
+    it "builds a member string if member option given" do
+      for_member = AtPay::SecurityKey.new(session, amount: 25.0, member: 'fakemember')
+
+      expect(for_member.send(:target)).to eq("member<fakemember>")
+    end
+
+    it "builds a url string if url option given" do
+      for_url = AtPay::SecurityKey.new(session, amount: 25.0, url: 'http://fake.url.com')
+
+      expect(for_url.send(:target)).to eq("url<http://fake.url.com>")
+    end
   end
 
   describe "#to_s" do
