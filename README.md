@@ -1,6 +1,6 @@
 # @Pay API Client
 
-[![Build Status](https://travis-ci.org/atpay/atpay-client.png)](https://travis-ci.org/atpay/atpay-client) ![Coverage Status](https://coveralls.io/repos/atpay/atpay-client/badge.png?branch=master)](https://coveralls.io/r/atpay/atpay-client?branch=master)
+[![Build Status](https://travis-ci.org/atpay/atpay-client.png)](https://travis-ci.org/atpay/atpay-client) [![Coverage Status](https://coveralls.io/repos/atpay/atpay-client/badge.png?branch=master)](https://coveralls.io/repos/atpay/atpay-client/badge.png?branch=master)
 
 
 Client interface for the @Pay API and key generation for 
