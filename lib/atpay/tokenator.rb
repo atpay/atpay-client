@@ -174,25 +174,6 @@ module AtPay
 
     # Find the target of the token.  This could be a Credit Card,
     # Email Address, URL or Member UUID.
-    # def target(target)
-    #   case target
-    #   when /card<(.*?)>/
-    #     @card = $1
-    #     @payload.slice!(0, ($1.length + 7))
-    #   when /email<(.*?)>/
-    #     @email = $1
-    #     @payload.slice!(0, ($1.length + 8))
-    #   when /member<(.*?)>/
-    #     @member = $1
-    #     @payload.slice!(0, ($1.length + 9))
-    #   when /url<(.*?)>/
-    #     @url = $1
-    #     @payload.slice!(0, ($1.length + 6))
-    #   else
-    #     raise "No target found"
-    #   end
-    # end
-
     def target(target)
       match = TARGETS.keys.detect { |key| target.match key }
 
