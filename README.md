@@ -76,6 +76,7 @@ session = AtPay::Session.new({
 * Parameters marked as [global] must be passed on the command line
 * Parameters marked with [site-token] are required for site tokens
 * Parameters marked with [email-token] are required for email tokens
+* Parameters marked with [universal-token] are required for universal tokens
 * Parameters marked with [token] are accepted for both site and email tokens
 
 ### CSV via STDIN
