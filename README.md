@@ -1,6 +1,6 @@
 # @Pay API Client
 
-[![Build Status](https://travis-ci.org/atpay/atpay-client.png)](https://travis-ci.org/atpay/atpay-client)
+[![Build Status](https://travis-ci.org/atpay/atpay-client.png)](https://travis-ci.org/atpay/atpay-client) ![Coverage Status](https://coveralls.io/repos/atpay/atpay-client/badge.png?branch=master)](https://coveralls.io/r/atpay/atpay-client?branch=master)
 
 
 Client interface for the @Pay API and key generation for 
@@ -47,30 +47,31 @@ session = AtPay::Session.new({
 
 ## Command Line Usage
 
-    $ atpay-client --help
+    $ atpay_tokens --help
 
 
 ### Parameters
 
-    atpay-token-generator v2.0
+    atpay_tokens v2.1
     Options:
-                 --private-key, -p <s>:   [global] The private key given to you by @Pay
-                  --public-key, -u <s>:   [global] @Pay's public key, given to you by @Pay
-                  --partner-id, -a <i>:   [global] The partner ID given to you by @Pay
-                 --environment, -e <s>:   [global] The environment you want to generate buttons for. Currently sandbox or production (default: production)
-                      --config, -c <s>:   [global] The path to a configuration file in yml format
-                        --type, -t <s>:   [global] The type of token to generate (site,email)
-                        --card, -r <s>:   [site-token, email-token] The card token associated with the recipient of this token. If `type` is site, this must be present
-                       --email, -m <s>:   [email-token] The email associated with the receipt of this token. Incomptible when `type` is 'site'
-                      --amount, -o <f>:   [token] The amount a user should be charged for the transaction you're generating a token for (default: 5.0)
-                   --user-data, -s <s>:   [token] Data to pass back as a reference
-                     --expires, -x <i>:   [token] Expiration date for token, integer value of seconds since epoch
-           --header-user-agent, -h <s>:   [site-token] The HTTP_USER_AGENT from the client's request header (if `type` is 'site')
+             --private-key, -p <s>:   [global] The private key given to you by @Pay
+              --public-key, -u <s>:   [global] @Pay's public key, given to you by @Pay
+              --partner-id, -a <i>:   [global] The partner ID given to you by @Pay
+             --environment, -e <s>:   [global] The environment you want to generate buttons for. Currently sandbox or production (default: production)
+                  --config, -c <s>:   [global] The path to a configuration file in yml format
+                    --type, -t <s>:   [global] The type of token to generate (site,email,universal)
+                    --card, -r <s>:   [site-token, email-token] The card token associated with the recipient of this token. If `type` is site, this must be present
+                   --email, -m <s>:   [email-token] The email associated with the receipt of this token. Incompatible when `type` is 'site'
+                     --url, -l <s>:   [universal-token] The Signup url the recipient should go to if they don't have payment informaiton.  Incompatible when `type` is 'site' or 'email'
+                  --amount, -o <f>:   [token] The amount a user should be charged for the transaction you're generating a token for (default: 5.0)
+               --user-data, -s <s>:   [token] Data to pass back as a reference
+                 --expires, -x <i>:   [token] Expiration date for token, integer value of seconds since epoch
+       --header-user-agent, -h <s>:   [site-token] The HTTP_USER_AGENT from the client's request header (if `type` is 'site')
       --header-accept-language, -d <s>:   [site-token] The HTTP_ACCEPT_LANGUAGE from the client's request header (if `type` is 'site')
-           --header-accept-charset <s>:   [site-token] The HTTP_ACCEPT_CHARSET from the client's request header (if `type` is 'site')
-                  --ip-address, -i <s>:   [site-token] The IP address of the token recipient (if `type` is 'site')
-                         --version, -v:   Print version and exit
-                            --help, -l:   Show this message
+       --header-accept-charset <s>:   [site-token] The HTTP_ACCEPT_CHARSET from the client's request header (if `type` is 'site')
+              --ip-address, -i <s>:   [site-token] The IP address of the token recipient (if `type` is 'site')
+                     --version, -v:   Print version and exit
+                            --help:   Show this message
 
 * Parameters marked as [global] must be passed on the command line
 * Parameters marked with [site-token] are required for site tokens

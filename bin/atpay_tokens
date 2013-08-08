@@ -8,7 +8,7 @@ require 'csv'
 require 'trollop'
 
 $opts = Trollop::options do
-  version "atpay-token-generator v2.1"
+  version "atpay_tokens v2.1"
 
   # Global
   opt :private_key, "[global] The private key given to you by @Pay", :type => :string
