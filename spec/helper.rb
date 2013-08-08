@@ -8,8 +8,6 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 
 SimpleCov.start
 
-require 'rubygems'
-require 'bundler/setup'
 require 'atpay_tokens'
 require 'rspec/core/shared_context'
 

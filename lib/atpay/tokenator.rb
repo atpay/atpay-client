@@ -11,6 +11,13 @@ module AtPay
       :ip,
       :user_data
 
+    TARGETS = {
+      /url<(.*?)>/ => [:@url, 6],
+      /card<(.*?)>/ => [:@card, 7],
+      /email<(.*?)>/ => [:@email, 8],
+      /member<(.*?)>/ => [:@member, 9]
+    }
+
     # A bit clunky but useful for testing token decomposition.
     # If you provide a test session then the config values there 
     # will be used so that decryption will function without @Pay's
@@ -74,7 +81,7 @@ module AtPay
     end
 
     def source
-      {email: @email, card: @card, member: @member}
+      { email: @email, card: @card, member: @member, url: @url }
     end
 
     # Return parts in a hash structure, handy for ActiveRecord.
@@ -165,22 +172,34 @@ module AtPay
       return @user_data
     end
 
-    # Find the target of the token.  This could be a Credit Card
-    # Email Address or Member UUID.
+    # Find the target of the token.  This could be a Credit Card,
+    # Email Address, URL or Member UUID.
+    # def target(target)
+    #   case target
+    #   when /card<(.*?)>/
+    #     @card = $1
+    #     @payload.slice!(0, ($1.length + 7))
+    #   when /email<(.*?)>/
+    #     @email = $1
+    #     @payload.slice!(0, ($1.length + 8))
+    #   when /member<(.*?)>/
+    #     @member = $1
+    #     @payload.slice!(0, ($1.length + 9))
+    #   when /url<(.*?)>/
+    #     @url = $1
+    #     @payload.slice!(0, ($1.length + 6))
+    #   else
+    #     raise "No target found"
+    #   end
+    # end
+
     def target(target)
-      case target
-      when /card<(.*?)>/
-        @card = $1
-        @payload.slice!(0, ($1.length + 7))
-      when /email<(.*?)>/
-        @email = $1
-        @payload.slice!(0, ($1.length + 8))
-      when /member<(.*?)>/
-        @member = $1
-        @payload.slice!(0, ($1.length + 9))
-      else
-        raise "No target found"
-      end
+      match = TARGETS.keys.detect { |key| target.match key }
+
+      raise "No target found" if match.nil?
+
+      instance_variable_set TARGETS[match][0], $1.dup
+      @payload.slice!(0, ($1.length + TARGETS[match][1]))
     end
   end
 end

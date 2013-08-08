@@ -13,6 +13,7 @@ describe AtPay::Tokenator do
   let(:version) { AtPay::Tokenator.new token(50.00, [:email_token], {email: 'email@address', version: 2}), build_session }
   let(:member) { AtPay::Tokenator.new token(50.00, [:email_token], {member: '4DF08A79-C16C-4842-AA1B-AE878C9C6C2C'}), build_session }
   let(:group) { AtPay::Tokenator.new token(50.00, [:email_token], {member: '4DF08A79-C16C-4842-AA1B-AE878C9C6C2C', group: '18', user_data: 'hello from data'}), build_session }
+  let(:url) { AtPay::Tokenator.new token(50.00, [:email_token], {url: 'http://fake.url' }), build_session }
 
   describe "Parsing" do
     it "Uses the key specified in ENCRYPTION if not given a session" do
@@ -57,6 +58,13 @@ describe AtPay::Tokenator do
 
         group.group.should eq('18')
         group.user_data.should eq('hello from data')
+      end
+
+      it "processes a url token" do
+        url.header
+        url.body Base64.decode64(public_key)
+
+        url.source[:url].should eq('http://fake.url')
       end
     end
 

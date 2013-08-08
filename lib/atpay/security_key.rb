@@ -78,7 +78,7 @@ module AtPay
     end
 
     def target
-      format_target [:card, :member, :email, :url].select { |key| @options[key] }.first
+      format_target [:card, :member, :email, :url].detect { |key| @options[key] }
     end
 
     def format_target(key)
