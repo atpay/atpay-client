@@ -8,7 +8,7 @@ require 'csv'
 require 'trollop'
 
 $opts = Trollop::options do
-  version "atpay-token-generator v2.0"
+  version "atpay_tokens v2.1"
 
   # Global
   opt :private_key, "[global] The private key given to you by @Pay", :type => :string
@@ -16,11 +16,12 @@ $opts = Trollop::options do
   opt :partner_id, "[global] The partner ID given to you by @Pay", :type => :integer
   opt :environment, "[global] The environment you want to generate buttons for. Currently sandbox or production", :default => 'production', :type => :string
   opt :config, "[global] The path to a configuration file in yml format", :type => :string
-  opt :type, "[global] The type of token to generate (site,email)", :type => :string
+  opt :type, "[global] The type of token to generate (site,email,universal)", :type => :string
 
   # Per Token
   opt :card, "[site-token, email-token] The card token associated with the recipient of this token. If `type` is site, this must be present", :type => :string
-  opt :email, "[email-token] The email associated with the receipt of this token. Incomptible when `type` is 'site'", :type => :string
+  opt :email, "[email-token] The email associated with the receipt of this token. Incompatible when `type` is 'site'", :type => :string
+  opt :url, "[universal-token] The Signup url the recipient should go to if they don't have payment informaiton.  Incompatible when `type` is 'site' or 'email'", :type => :string
 
   opt :amount, "[token] The amount a user should be charged for the transaction you're generating a token for", :default => 5.0
   opt :user_data, "[token] Data to pass back as a reference", :type => :string
@@ -64,16 +65,12 @@ module Args
 
   class TokenSet
     def next_token
-      if cli?
-        cli
-      else
-        stdin
-      end
+      cli? ? cli : stdin
     end
 
     private
     def cli?
-      ($opts[:card] or $opts[:email]) and $opts[:type]
+      ($opts[:card] or $opts[:email] or $opts[:url]) and $opts[:type]
     end
 
     def cli
@@ -119,17 +116,20 @@ class Generator
     Trollop::die :ip_address, "must be present for site_tokens" if site? and options[:ip_address].nil?
     Trollop::die :email, "or card must be present for all rows" if email? and (options[:card].nil? and options[:email].nil?)
     Trollop::die :amount, "must be present" if options[:amount].nil?
+    Trollop::die :url, "must be present" if universal? and options[:url].nil?
+    Trollop::die :email, "incompatible with universal tokens" if universal? and options[:email]
+    Trollop::die :card, "incompatible with universal tokens" if universal? and options[:card]
   end
 
   def next
-    return unless options=next_config
+    return unless options = next_config
     options[:amount] = options[:amount].to_f
 
     row_option_check(options)
 
     security_key = session.security_key(options)
 
-    if email?
+    if email? or universal?
       security_key.email_token
     elsif site?
       headers = {
@@ -158,11 +158,15 @@ class Generator
   def site?
     $opts[:type] == "site"
   end
+
+  def universal?
+    $opts[:type] == 'universal'
+  end
 end
 
 config = Args::Main.new
 generator = Generator.new(config)
 
-while token=generator.next
+while token = generator.next
   puts token
 end
