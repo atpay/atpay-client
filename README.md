@@ -24,7 +24,7 @@ Add the 'atpay_tokens' gem to your Gemfile:
 ```ruby
 #Gemfile
 
-gem 'atpay_tokens', :github => "atpay/atpay-client"
+gem 'atpay_tokens'
 ```
 
 ## Configuration
