@@ -159,7 +159,7 @@ module AtPay
     end
 
     def parse_amount!
-      @amount = @payload.slice!(0, 4).unpack("g")[0]
+      @amount = @payload.slice!(0, 4).unpack("g")[0].round(2)
     end
 
     def parse_expiration!

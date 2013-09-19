@@ -146,5 +146,17 @@ describe AtPay::Tokenator do
         AtPay::Tokenator.find_by_checksum(token)
       end
     end
+
+    describe "Amounts" do
+      let(:site) { AtPay::Tokenator.new token(33.33, [:site_token, ip, headers], {card: 'OGQ3OWE0OWNhMFFTL4mMpQA='}), build_session }
+
+      it "should decode into an amount at 33.33" do
+        site.header
+        site.browser_data(Base64.decode64(public_key))
+        site.body(Base64.decode64(public_key))
+
+        site.amount.should eq(33.33)
+      end
+    end
   end
 end
