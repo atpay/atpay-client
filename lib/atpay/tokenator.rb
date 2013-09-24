@@ -141,7 +141,8 @@ module AtPay
       # TARGET/AMOUNTEXPIRATION/USERDATA
       # TARGET/AMOUNTEXPIRATION
       if @payload.match '>:'
-        raw_target, @group = @payload.split(':', 2)
+        raw_target, @group = @payload.split('>:', 2)
+        raw_target += '>'
       else
         raw_target = @payload
       end
