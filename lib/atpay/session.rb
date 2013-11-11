@@ -32,7 +32,7 @@ module AtPay
     end
 
     def boxer
-      @boxer ||= Crypto::Box.new(config.atpay_public_key, config.private_key)
+      @boxer ||= RbNaCl::Box.new(config.atpay_public_key, config.private_key)
     end
   end
 end

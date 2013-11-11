@@ -16,7 +16,7 @@ module Setup
 
   let(:partner_id)      { 123 }
   let(:keys)            { 
-    sec = Crypto::PrivateKey.generate
+    sec = RbNaCl::PrivateKey.generate
     pub = sec.public_key
     [pub.to_bytes, sec.to_bytes]
   }
