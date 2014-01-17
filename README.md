@@ -31,7 +31,7 @@ gem 'atpay_tokens'
 
 With the `keys` scope, authenticate with OAuth, and make a request
 to the 'keys' endpoint (see the api documentation at
-https://developer.atpay.com) to receive the partner_id,
+http://developer.atpay.com) to receive the partner_id,
 public key and private key.
 
 Apply these values to your configuration
