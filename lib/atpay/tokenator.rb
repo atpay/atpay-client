@@ -88,7 +88,7 @@ module AtPay
     def to_h
       {
         sale_price: @amount,
-        expires_at: Time.at(@expires),
+        expires_at: Time.at(Time.now + @expires),
         group: @group,
         encoded_key: @checksum
       }
