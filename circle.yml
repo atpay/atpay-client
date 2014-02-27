@@ -1,9 +1,9 @@
 dependencies:
   pre:
-    - curl -O http://download.dnscrypt.org/libsodium/releases/libsodium-0.4.1.tar.gz
-    - tar -xvzf libsodium-0.4.1.tar.gz
-    - cd libsodium-0.4.1 && ./configure && make
-    - cp libsodium-0.4.1/src/libsodium/.libs/libsodium.so ./lib/
+    - curl -O http://download.dnscrypt.org/libsodium/releases/libsodium-0.4.5.tar.gz
+    - tar -xvzf libsodium-0.4.5.tar.gz
+    - cd libsodium-0.4.5 && ./configure && make
+    - cp libsodium-0.4.5/src/libsodium/.libs/libsodium.so ./lib/
 
 machine:
   environment:
