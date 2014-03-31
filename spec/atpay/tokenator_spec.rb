@@ -66,6 +66,14 @@ describe AtPay::Tokenator do
 
         url.source[:url].should eq('http://fake.url')
       end
+
+      it "processes a legacy token that doesn't have a trailing @" do
+        tok = token(50.00, [:email_token], {email: 'email@address'})[0..-2]
+
+        tokenator = AtPay::Tokenator.new tok, build_session
+        tokenator.header
+        tokenator.body Base64.decode64(public_key)
+      end
     end
 
     describe "Exceptions" do
