@@ -37,7 +37,7 @@ describe AtPay::SecurityKey do
     it "fails when amount not float" do
       expect {
         AtPay::SecurityKey.new(session, {
-          :amount => "25", 
+          :amount => "25",
           :email => "test@example.com"
         })
       }.to raise_error
@@ -89,6 +89,13 @@ describe AtPay::SecurityKey do
 
     it "returns a key with user_data" do
       key = AtPay::SecurityKey.new(session, {:email => "glen@atpay.com", :amount => 25.00, :user_data => 'bacon and eggs'}).to_s
+    end
+
+    it "encapsulates the key with @" do
+      key = AtPay::SecurityKey.new(session, {email: 'glen@atpay.com', amount: 25.00}).to_s
+
+      expect(key[0]).to eq('@')
+      expect(key[-1]).to eq('@')
     end
   end
 end

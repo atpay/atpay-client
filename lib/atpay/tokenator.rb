@@ -1,15 +1,16 @@
 module AtPay
   class Tokenator
-    attr_reader :token, 
+    attr_reader :token,
       :payload,
-      :partner_id, 
-      :source, 
-      :amount, 
-      :expires, 
+      :partner_id,
+      :source,
+      :amount,
+      :expires,
       :group,
       :site_frame,
       :ip,
-      :user_data
+      :user_data,
+      :version
 
     TARGETS = {
       /url<(.*?)>/ => [:@url, 6],
@@ -19,12 +20,14 @@ module AtPay
     }
 
     # A bit clunky but useful for testing token decomposition.
-    # If you provide a test session then the config values there 
+    # If you provide a test session then the config values there
     # will be used so that decryption will function without @Pay's
     # private key.
     def initialize(token, session = nil)
+      trim_tail token
       @token = token
       @session = session
+      @version = Tokenator.token_version(token)
       strip_version
 
       @checksum = Digest::SHA1.hexdigest(token) # Before or after removing version?
@@ -52,7 +55,7 @@ module AtPay
         Base64.decode64(version[1..-1]).unpack("Q>")[0]
       end
     end
-    
+
 
     # We want to pull the header out of the token.  This means we
     # grab the nonce and the partner id from the token.  The version
@@ -104,7 +107,7 @@ module AtPay
 
     # Fix our Base64 problems
     def decode
-      @token = Base64.decode64 @token 
+      @token = Base64.decode64 @token
     end
 
     # Extract our entropy
@@ -150,10 +153,10 @@ module AtPay
       target raw_target
 
       if @group
-        @group = @payload.slice!(0, @group.index("/")) 
+        @group = @payload.slice!(0, @group.index("/"))
         @payload.slice!(0, 1)
       end
-      
+
       @amount = parse_amount!
       @expiration = parse_expiration!
       @user_data = parse_user_data!
@@ -182,6 +185,11 @@ module AtPay
 
       instance_variable_set TARGETS[match][0], $1.dup
       @payload.slice!(0, ($1.length + TARGETS[match][1]))
+    end
+
+    # Remove the trailing @ if it's present on the token
+    def trim_tail(token)
+      token.chomp! '@'
     end
   end
 end

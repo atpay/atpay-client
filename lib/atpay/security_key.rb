@@ -15,7 +15,7 @@ module AtPay
     end
 
     def email_token
-      "@#{version}#{Base64.strict_encode64([nonce, partner_frame, body_frame].join)}"
+      "@#{version}#{Base64.strict_encode64([nonce, partner_frame, body_frame].join)}@"
     ensure
       @nonce = nil
     end
@@ -49,7 +49,7 @@ module AtPay
         remote_addr
       ].join))
 
-      [[message.length].pack("l>"), message, 
+      [[message.length].pack("l>"), message,
         [remote_addr.length].pack("l>"), remote_addr].join
     end
 
