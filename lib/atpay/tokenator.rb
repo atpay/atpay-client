@@ -24,13 +24,12 @@ module AtPay
     # will be used so that decryption will function without @Pay's
     # private key.
     def initialize(token, session = nil)
-      trim_tail token
-      @token = token
+      @token = format_token token
       @session = session
-      @version = Tokenator.token_version(token)
+      @version = Tokenator.token_version(@token)
       strip_version
 
-      @checksum = Digest::SHA1.hexdigest(token) # Before or after removing version?
+      @checksum = Digest::SHA1.hexdigest(@token) # Before or after removing version?
     end
 
     class << self
@@ -190,6 +189,13 @@ module AtPay
     # Remove the trailing @ if it's present on the token
     def trim_tail(token)
       token.chomp! '@'
+    end
+
+    def format_token(token)
+      tok = token.dup
+      trim_tail tok
+
+      tok
     end
   end
 end
