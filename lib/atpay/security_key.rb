@@ -15,14 +15,14 @@ module AtPay
     end
 
     def email_token
-      "@#{version}#{Base64.strict_encode64([nonce, partner_frame, body_frame].join)}@"
+      "@#{version}#{Base64.urlsafe_encode64([nonce, partner_frame, body_frame].join)}@"
     ensure
       @nonce = nil
     end
 
     def site_token(remote_addr, headers)
       raise ArgumentError.new("card or member required for site tokens") if @options[:card].nil? and @options[:member].nil?
-      "@#{version}#{Base64.strict_encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
+      "@#{version}#{Base64.urlsafe_encode64([nonce, partner_frame, site_frame(remote_addr, headers), body_frame].join)}"
     ensure
       @nonce = nil
     end
@@ -34,7 +34,7 @@ module AtPay
 
     private
     def version
-      @options[:version] ? (Base64.strict_encode64([@options[:version]].pack("Q>")) + '-') : nil
+      @options[:version] ? (Base64.urlsafe_encode64([@options[:version]].pack("Q>")) + '~') : nil
     end
 
     def partner_frame

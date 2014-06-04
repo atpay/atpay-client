@@ -35,7 +35,7 @@ module AtPay
     class << self
       # Get the version of the given token.
       def token_version(token)
-        token.scan('-').empty? ? 0 : unpack_version(token.split('-')[0])
+        token.scan('~').empty? ? 0 : unpack_version(token.split('~')[0])
       end
 
       # Check and make sure we haven't seen this token before.
@@ -51,7 +51,9 @@ module AtPay
 
       # Unpack the actual version value.
       def unpack_version(version)
-        Base64.decode64(version[1..-1]).unpack("Q>")[0]
+        v = version[0] == '@' ? Base64.urlsafe_decode64(version[1..-1]) : Base64.urlsafe_decode64(version)
+        
+        v.unpack("Q>")[0]
       end
     end
 
@@ -101,12 +103,12 @@ module AtPay
 
     # Strip the version frame from the token.
     def strip_version
-      @token = @token.split('-').last
+      @token = @token.split('~').last
     end
 
     # Fix our Base64 problems
     def decode
-      @token = Base64.decode64 @token
+      @token = Base64.urlsafe_decode64(@token)
     end
 
     # Extract our entropy
@@ -193,9 +195,8 @@ module AtPay
 
     def format_token(token)
       tok = token.dup
-      trim_tail tok
-
-      tok
+      
+      tok.gsub('@', '').strip
     end
   end
 end

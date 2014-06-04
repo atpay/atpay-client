@@ -1,8 +1,9 @@
 require 'helper'
 require 'atpay_tokens'
+require 'pry'
 
 describe "atpay_tokens" do
-  let(:key_pattern) { /@((([A-Za-z0-9+=*]{4})*-)?([A-Za-z0-9+=\/]{4}){5,})/ }
+  let(:key_pattern) { /@((([A-Za-z0-9\-=*]{4})*~)?([A-Za-z0-9\-=_]{4}){5,})/ }
   let(:base_args) { "--environment test --private-key \"#{private_key}\" --public-key \"#{public_key}\" --partner-id 1 --amount 24.0"}
   let(:universal_token_args) { "#{base_args} --type universal --url http://bob.com" }
   let(:site_token_args) { "#{base_args} --type site --card cardtoken --header-user-agent bob --header-accept-language en --header-accept-charset us --ip-address 127.0.0.1" }
