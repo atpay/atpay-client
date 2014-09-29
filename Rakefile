@@ -11,3 +11,6 @@ task :ci => %w(ci:sodium spec)
 
 
 CLEAN.add "lib/libsodium.*"
+
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec)
